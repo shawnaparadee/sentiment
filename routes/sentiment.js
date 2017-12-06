@@ -1,5 +1,4 @@
 ﻿var express = require('express');
-var bodyParser = require('body-parser');
 var sentiment = require('sentiment');
 var Twitter = require('twitter');
 var router = express.Router();
@@ -14,12 +13,6 @@ var twitter = new Twitter({
     access_token_key: config.twitter.access_token_key,
     access_token_secret: config.twitter.access_token_secret
 });
-
-// create application/json parser
-var jsonParser = bodyParser.json()
-
-// create application/x-www-form-urlencoded parser
-var urlencodedParser = bodyParser.urlencoded({ extended: false })
 
 // information to collect per phrase
 var tweetCount = 0;

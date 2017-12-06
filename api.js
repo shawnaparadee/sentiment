@@ -7,16 +7,11 @@ var config; // application configuration information
 var express; // web framework for node ( https://expressjs.com/en/4x/api.html )
 var path;
 var favicon; // middleware for serving a favicon
-var logger; // HTTP request logger
-var cookieParser; // cookie parsing with signatures
-var pg;  //postgresql connection
-var bodyParser; // body parsing middleware
 var requestIp; // get client ip addresses
 var environment = 'production'; // default environment
 // route variables
 var sentiment;
 
-var debug = require('debug')('sentiment-demo');
 var args = process.argv.slice(2);
 
 // load the application configuration file (config.js)
@@ -57,10 +52,6 @@ try {
     express = require("express");
     path = require('path');
     favicon = require('serve-favicon');
-    logger = require('morgan');
-    cookieParser = require('cookie-parser');
-    pg = require('pg');
-    bodyParser = require('body-parser');
     requestIp = require('request-ip');
     app = express();
     var expressJwt = require('express-jwt');
