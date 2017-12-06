@@ -95,10 +95,6 @@ try {
 // connect the packages to the application (mount middleware)
 try {
     app.use(favicon(__dirname + '/public/favicon.ico'));
-    app.use(logger('dev'));
-    app.use(bodyParser.json());
-    app.use(bodyParser.urlencoded({ extended: true }));
-    app.use(cookieParser());
     app.use('/images', express.static(path.join(__dirname, 'images')));
     app.use('/styles', express.static(path.join(__dirname, 'styles')));
 
@@ -120,42 +116,6 @@ try {
 
         // Pass to next layer of middleware
         next();
-    });
-
-    /**
-     * Express JWT Middleware
-     */
-    // expressJwt.unless = unless;
-    // app.use(expressJwt({
-    //     secret: config.auth.secret,
-    //     getToken: function fromHeaderOrQuerystring(req) {
-    //         if (req.headers.authorization && req.headers.authorization.split(' ')[0] === 'Bearer') {
-    //             return req.headers.authorization.split(' ')[1];
-    //         } else if (req.query && req.query.token) {
-    //             return req.query.token;
-    //         }
-    //         return null;
-    //     }
-    // })
-    // // Paths that should not require auth
-    // .unless({
-    //     path: [
-    //         config.subDirectory[environment],  // help documentation is at the root
-    //         config.subDirectory[environment] + 'testSentiment'
-    //     ]
-    // }));
-
-
-    // Catch other errors like bogus JSON in a POST body
-    // Also catch JWT Authorization failures.
-    app.use(function (err, req, res, next) {
-        if (err && err.name === 'UnauthorizedError') {
-            err.authenticated = false;
-            res.status(401).json(err);
-        }
-        else if (err) {
-            res.status(err.status || 500).json({ status: 'ERROR', errCode: err.status || 500, error: err });
-        }
     });
 
 } catch (e) {
