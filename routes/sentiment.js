@@ -15,20 +15,23 @@ var twitter = new Twitter({
 });
 
 // information to collect per phrase
-var tweetCount = 0;
-var tweetTotalSentiment = 0;
-var tweetAvgSentiment = null;
-var tweetMaxSentiment = null;
-var tweetMinSentiment = null;
-var tweetPositiveWords = [];
-var tweetNegativeWords = [];
-var monitoringPhrase;
-var stream;
+var tweetCount = 0; // number of tweets 
+var tweetMaxSearches = 7; // number of searches to allow before destroy (otherwise it just keeps going even after user has left page)
+var tweetSearches = 1; // number of searches returned for a phrase
+var tweetTotalSentiment = 0; // total sentiment value
+var tweetAvgSentiment = null; // average sentiment (total / count)
+var tweetMaxSentiment = null; // max sentiment value
+var tweetMinSentiment = null; // min sentiment value
+var tweetPositiveWords = []; // positive words from tweets use in sentiment calulation
+var tweetNegativeWords = []; // negative words from tweets use in sentiment calulation
+var monitoringPhrase; // phrase to search Twitter
+var stream; // the Twitter stream
+var searching = false; // the Twitter stream is active
 
 // reset for new phrase monitoring
 router.get('/reset', function (req, res) {
 
-    resetMonitoring();
+    resetMonitoring(true);
 
     var welcomeResponse = createWelcomPage();
 
@@ -41,18 +44,21 @@ router.get('/beginMonitoring', function (req, res) {
 
     // if monitoring phrase is empty reset
     if (monitoringPhrase) {
-        resetMonitoring();
+        resetMonitoring(true);
     }
+
     // phrase to monitor on Twitter
     monitoringPhrase = req.query.phrase;
     tweetCount = 0;
     tweetTotalSentiment = 0;
+    searching = true;
 
     // begin twitter stream using phrase
     stream = twitter.stream('statuses/filter', { track: monitoringPhrase });
 
     // evaluate each stream (will stream until reset is called)
     stream.on('data', function (data) {
+        searching = true;
         // only evaluate the sentiment of English-language tweets
         if (data.lang === 'en') {
             sentiment(data.text, function (err, result) {
@@ -95,10 +101,18 @@ router.get('/beginMonitoring', function (req, res) {
         "<div class='jumbotron'>" +
         "<h1 class='display-3'>How is Twitter feeling about <span class='text-primary'>" + monitoringPhrase + "</span>?</h1>" +
         "<p class='lead'></p> " +
-        "<div class='emoji'><image style='vertical-align:middle' src='/images/" + sentimentImage() + ".png'/><div>" + sentimentImage() + "</div></div>" +
-        "<p class='display-3'>Based on " + tweetCount + " analyzed tweets...</p>" +
-        "<hr class='my-4'>" +
-        "<a class='btn btn-primary' href='/reset'>Monitor another phrase</a></BODY>";
+        "<div class='emoji'><image style='vertical-align:middle' src='/images/" + sentimentImage() + ".png'/><div>" + sentimentImage() + "</div></div>";
+    if (searching) {
+        var progress = (tweetSearches / tweetMaxSearches) * 100;
+        monitoringResponse += "<p class='display-3'>Searching tweets...</p>" +
+            "<div class='progress'>" +
+            "<div class='progress-bar progress-bar-striped progress-bar-animated' role='progressbar' aria-valuenow='" + tweetSearches + "' aria-valuemin='0' aria-valuemax='" + tweetMaxSearches + "' style='width: " + progress + "%'></div></div>";
+    }
+    else {
+        monitoringResponse += "<p class='display-3'>Search complete, analyzed " + tweetCount + " tweets...</p>";
+    }
+    monitoringResponse += "<hr class='my-4'>" +
+        "<a class='btn btn-success' href='/reset'>Monitor another phrase</a></BODY>";
 
     res.send(monitoringResponse);
 
@@ -107,17 +121,23 @@ router.get('/beginMonitoring', function (req, res) {
 
 // home page
 router.get('/', function (req, res) {
+
     // if we are not monitoring a phrase then send the welcome page
     if (!monitoringPhrase) {
+        tweetSearches = 1;
         // create welcome page
         var welcomeResponse = createWelcomPage();
         res.send(welcomeResponse);
     }
     // otherwise, send the monitoring page
     else {
-        // create monitoring page
-        var monitoringResponse = createMonitoringPage(req.headers.host);
-        res.send(monitoringResponse);
+        if (searching) {
+            tweetSearches++;
+            resetMonitoring(false);
+            // create monitoring page
+            var monitoringResponse = createMonitoringPage(req.headers.host);
+            res.send(monitoringResponse);
+        }
     }
 });
 
@@ -161,17 +181,25 @@ function createMonitoringPage(host) {
         "<div class='jumbotron'>" +
         "<h1 class='display-3'>How is Twitter feeling about <span class='text-primary'>" + monitoringPhrase + "</span>?</h1>" +
         "<p class='lead'></p> " +
-        "<div class='emoji'><image style='vertical-align:middle' src='/images/" + sentimentImage() + ".png'/><div>" + sentimentImage() + "</div></div>" +
-        "<p class='display-3'>Based on " + tweetCount + " analyzed tweets...</p>" +
-        "<hr class='my-4'>" +
-        "<a class='btn btn-primary' href='/reset'>Monitor another phrase</a><br><br>" +
+        "<div class='emoji'><image style='vertical-align:middle' src='/images/" + sentimentImage() + ".png'/><div>" + sentimentImage() + "</div></div>";
+    if (searching) {
+        var progress = (tweetSearches / tweetMaxSearches) * 100;
+        monitoringResponse += "<p class='display-3'>Searching tweets...</p>" +
+            "<div class='progress'>" +
+            "<div class='progress-bar progress-bar-striped progress-bar-animated' role='progressbar' aria-valuenow='" + tweetSearches + "' aria-valuemin='0' aria-valuemax='" + tweetMaxSearches + "' style='width: " + progress + "%'></div></div>";
+    }
+    else {
+        monitoringResponse += "<p class='display-3'>Search complete, analyzed " + tweetCount + " tweets.</p>";
+    }
+    monitoringResponse += "<hr class='my-4'>" +
+        "<a class='btn btn-success' href='/reset'>Monitor another phrase</a><br><br>" +
         // results
         "<table class='table table-striped table-hover table-bordered'>" +
         "<thead class='thead-light'>" +
-        "<tr><th>Total Sentiment</th><th>Maximum Sentiment</th><th>Minimum Sentiment</th><th>Average Sentiment</th></tr>" +
+        "<tr><th>Total Tweets Analyzed</th><th>Total Sentiment</th><th>Maximum Sentiment</th><th>Minimum Sentiment</th><th>Average Sentiment</th></tr>" +
         "</thead>" +
         "<tbody>" +
-        "<tr class='table-info'><td>" + tweetTotalSentiment + "</td><td>" + tweetMaxSentiment + "</td><td>" + tweetAvgSentiment + "</td><td>" + tweetAvgSentiment + "</td></tr>" +
+        "<tr class='table-info'><td>" + tweetCount + "</td><td>" + tweetTotalSentiment + "</td><td>" + tweetMaxSentiment + "</td><td>" + tweetAvgSentiment + "</td><td>" + tweetAvgSentiment + "</td></tr>" +
         "</tbody>" +
         "</table>" +
         "<table class='table table-striped table-hover table-bordered'>" +
@@ -260,9 +288,21 @@ function processWords(words) {
 }
 
 // reset monitoring process & phrase
-function resetMonitoring() {
-    stream.destroy();
-    monitoringPhrase = "";
+function resetMonitoring(reset) {
+    console.log("reset monitoring called.");
+    if (stream) {
+        if (tweetSearches >= tweetMaxSearches) {
+            console.log("Max of refreshes met, destorying search");
+            searching = false;
+            stream.destroy();
+        }
+        if (reset) {
+            searching = false;
+            stream.destroy();
+            tweetSearches = 1;
+            monitoringPhrase = "";
+        }
+    }
 }
 
 module.exports = router;
