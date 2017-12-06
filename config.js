@@ -4,14 +4,12 @@
 var config = {
     title: "Node Express API Broilerplate",
     subDirectory: {
-        "production": "/api/", // based on pm2 alias
-        "stage": "/stage-node-express-api/", // based on pm2 alias
+        "production": "/sentiment/", // based on pm2 alias
         "local": "/"
     },
     // Port settings
     port: {
-        "production": 8080,
-        "stage": 8082,
+        "production": 5000,
         "local": 5000
     },
     // Twitter settings

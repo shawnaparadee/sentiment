@@ -31,9 +31,6 @@ try {
 // example: $ node api.js local
 if (args.length > 0) {
     switch (args[0]) {
-        case 'stage':
-            environment = 'stage';
-            break;
         case 'local':
             environment = 'local';
             break;
@@ -45,9 +42,6 @@ if (args.length > 0) {
 // determine the target environment (parameter passed by pm2)
 if (process.env.NODE_ENV) {
     switch (process.env.NODE_ENV) {
-        case 'stage':
-            environment = 'stage';
-            break;
         case 'local':
             environment = 'local';
             break;
