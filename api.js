@@ -67,7 +67,7 @@ try {
     var unless = require('express-unless');
 } catch (e) {
     console.log("An error occurred during the loading of the packages. Please " +
-        "check to ensure all the packages listed in the package.json file are installed (nvm).");
+        "check to ensure all the packages listed in the package.json file are installed (nvm). Error: " + e);
     process.exit(1);
 }
 // load the routes, each route has a file in the routes folder
