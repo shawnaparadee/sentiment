@@ -131,13 +131,11 @@ router.get('/', function (req, res) {
     }
     // otherwise, send the monitoring page
     else {
-        if (searching) {
-            tweetSearches++;
-            resetMonitoring(false);
-            // create monitoring page
-            var monitoringResponse = createMonitoringPage(req.headers.host);
-            res.send(monitoringResponse);
-        }
+        tweetSearches++;
+        resetMonitoring(false);
+        // create monitoring page
+        var monitoringResponse = createMonitoringPage(req.headers.host);
+        res.send(monitoringResponse);
     }
 });
 
