@@ -9,8 +9,13 @@ var config = {
     },
     // Port settings
     port: {
-        "production": 5000,
+        "production": 8085,
         "local": 5000
+    },
+    // URL settings
+    url:{
+        "production": 'http://api.v10.investmentmapping.org',
+        "local": "http://localhost"
     },
     // Twitter settings
     twitter: {

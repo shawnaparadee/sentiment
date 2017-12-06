@@ -30,25 +30,7 @@ router.get('/reset', function (req, res) {
 
     resetMonitoring();
 
-    var welcomeResponse = "<HEAD>" +
-        "<link rel='stylesheet' type='text/css' href='http://localhost:5000/styles/style.css'>" +
-        "<link rel='stylesheet' type='text/css' href='http://localhost:5000/styles/bootstrap.min.css'>" +
-        "<title>Twitter Sentiment Analysis</title>\n" +
-        "</HEAD>\n" +
-        "<BODY>\n" +
-        "<div class='jumbotron'>" +
-        "<h1 class='display-3'>Sentiment Analysis using Twitter</h1>" +
-        "<p class='lead'>This is a demonstration of AFINN-based sentiment analysis using Twitter as the data source. This demo " +
-        "uses a Node.js library called <a href src='https://github.com/thisandagain/sentiment' target='blank'>sentiment</a> and " +
-        "the Twitter API to search Twitter to find the general sentiment of a word or phrase. To see demonstration, please " +
-        "enter a phrase into the text box below:</p>" +
-        "<hr class='my-4'>" +
-        "<p>Enter a word or phrase: </p>" +
-        "<form action='/beginMonitoring' method='get'>\n" +
-        "<fieldset>\n" +
-        "<input type='text' name='phrase'><br><br>\n" +
-        "<button type='submit' class='btn btn-primary'>How do people feel about this on Twitter?</button>" +
-        "</fieldset></form></BODY>";
+    var welcomeResponse = createWelcomPage();
 
     res.send(welcomeResponse);
 
@@ -105,8 +87,8 @@ router.get('/beginMonitoring', function (req, res) {
     var monitoringResponse =
         "<HEAD>" +
         "<META http-equiv='refresh' content='5; URL=http://" + req.headers.host + "/'>" +
-        "<link rel='stylesheet' type='text/css' href='http://localhost:5000/styles/style.css'>" +
-        "<link rel='stylesheet' type='text/css' href='http://localhost:5000/styles/bootstrap.min.css'>" +
+        "<link rel='stylesheet' type='text/css' href='" + config.url[environment] + ":" + config.port[environment] + "/styles/style.css'>" +
+        "<link rel='stylesheet' type='text/css' href='" + config.url[environment] + ":" + config.port[environment] + "/styles/bootstrap.min.css'>" +
         "<title>Twitter Sentiment Analysis</title>\n" +
         "</HEAD>\n" +
         "<BODY>\n" +
@@ -143,8 +125,8 @@ router.get('/', function (req, res) {
 function createWelcomPage() {
 
     var welcome = "<HEAD>" +
-        "<link rel='stylesheet' type='text/css' href='http://localhost:5000/styles/style.css'>" +
-        "<link rel='stylesheet' type='text/css' href='http://localhost:5000/styles/bootstrap.min.css'>" +
+        "<link rel='stylesheet' type='text/css' href='" + config.url[environment] + ":" + config.port[environment] + "/styles/style.css'>" +
+        "<link rel='stylesheet' type='text/css' href='" + config.url[environment] + ":" + config.port[environment] + "/styles/bootstrap.min.css'>" +
         "<title>Twitter Sentiment Analysis</title>\n" +
         "</HEAD>\n" +
         "<BODY>\n" +
@@ -171,8 +153,8 @@ function createMonitoringPage(host) {
     var monitoringResponse =
         "<HEAD>" +
         "<META http-equiv='refresh' content='5; URL=http://" + host + "/'>" +
-        "<link rel='stylesheet' type='text/css' href='http://localhost:5000/styles/style.css'>" +
-        "<link rel='stylesheet' type='text/css' href='http://localhost:5000/styles/bootstrap.min.css'>" +
+        "<link rel='stylesheet' type='text/css' href='" + config.url[environment] + ":" + config.port[environment] + "/styles/style.css'>" +
+        "<link rel='stylesheet' type='text/css' href='" + config.url[environment] + ":" + config.port[environment] + "/styles/bootstrap.min.css'>" +
         "<title>Twitter Sentiment Analysis</title>\n" +
         "</HEAD>\n" +
         "<BODY>\n" +

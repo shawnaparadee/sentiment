@@ -8,7 +8,7 @@ var express; // web framework for node ( https://expressjs.com/en/4x/api.html )
 var path;
 var favicon; // middleware for serving a favicon
 var requestIp; // get client ip addresses
-var environment = 'production'; // default environment
+environment = 'production'; // default environment
 // route variables
 var sentiment;
 
