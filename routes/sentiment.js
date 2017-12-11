@@ -70,9 +70,9 @@ router.get('/monitorTwitter', function (req, res) {
 var twitterMonitor = {
     count: 0, // number of tweets 
     total: 0, // total sentiment value
-    avg: null, // average sentiment (total / count)
-    max: null, // max sentiment value
-    min: null, // min sentiment value
+    avg: 0, // average sentiment (total / count)
+    max: 0, // max sentiment value
+    min: 0, // min sentiment value
     positive: [], // positive words from tweets use in sentiment calulation
     negative: [], // negative words from tweets use in sentiment calulation
     stream: null, // the Twitter stream
