@@ -32,14 +32,16 @@ function beginMonitoring(phrase) {
             }
             else {
                 monitorActive = false;
-                // stop monitoring
-                var jqxhr = $.get("sentiment/stopTwitter?phrase=" + phrase, function (monitor) {
-                    console.log("Phrase: " + monitor.phrase);
-                    monitorPage.innerHTML = createMonitoringPage(monitor, monitoringRequests);
-                }).fail(function () {
-                    monitorPage.innerHTML = createMonitoringPage("error", monitoringRequests);
-                    console.log("error");
-                });
+                setTimeout(function () {
+                    // stop monitoring
+                    var jqxhr = $.get("sentiment/stopTwitter?phrase=" + phrase, function (monitor) {
+                        console.log("Phrase: " + monitor.phrase);
+                        monitorPage.innerHTML = createMonitoringPage(monitor, monitoringRequests);
+                    }).fail(function () {
+                        monitorPage.innerHTML = createMonitoringPage("error", monitoringRequests);
+                        console.log("error");
+                    });
+                }, 2000)
             }
         }, 2000) // wait time between requests
     }
