@@ -31,6 +31,10 @@ input {
     text-align: center;
 }
 
+.request-count{
+    float: right;
+}
+
 .badge {
     margin: 2px;
     font-size: 24px;

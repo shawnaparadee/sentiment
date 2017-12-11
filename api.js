@@ -88,7 +88,9 @@ try {
     app.use(favicon(__dirname + '/public/favicon.ico'));
     app.use('/images', express.static(path.join(__dirname, 'images')));
     app.use('/styles', express.static(path.join(__dirname, 'styles')));
-
+    app.use('/javascript', express.static(path.join(__dirname, 'public/javascripts')));
+    app.use('/', express.static(path.join(__dirname, 'public')));
+    
     // Add headers
     app.use(function (req, res, next) {
 
@@ -117,7 +119,7 @@ try {
 
 // set the routes
 try {
-    app.use('/', sentiment);
+    app.use('/sentiment', sentiment);
 } catch (e) {
     console.log("An error occurred while setting the routes. " +
         "Error message: " + e.message);

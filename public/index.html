@@ -1,0 +1,44 @@
+<HEAD>
+    <link rel="stylesheet" type="text/css" href="styles/style.css">
+    <link rel="stylesheet" type="text/css" href="styles/bootstrap.min.css">
+    <script src="javascript/script.js"></script>
+    <script src="javascript/jquery-3.2.1.min.js"></script>
+    <title>Twitter Sentiment Analysis</title>
+</HEAD>
+
+<body onload="init();">
+    <div id="welcome">
+        <div class="jumbotron">
+            <h1 class="display-3">Sentiment Analysis using Twitter NEW</h1>
+            <p class="lead">This is a demonstration of AFINN-based sentiment analysis using Twitter as the data source. This demo uses a
+                Node.js library called
+                <a href src="https://github.com/thisandagain/sentiment" target="blank">sentiment</a> and the Twitter API to search Twitter to find the general sentiment of a word or phrase. To
+                see demonstration, please enter a phrase into the text box below:</p>
+            <hr class="my-4">
+            <p>Enter a word or phrase: </p>
+            <input id="phrase" type="text" name="phrase">
+            <br>
+            <br>
+            <button id="monitor-button" type="button" onclick="beginMonitoring(document.getElementById('phrase').value)" class="btn btn-primary">How do people feel about this on Twitter?</button>
+        </div>
+    </div>
+    <div id="monitor" style="display:none;">
+        <div class="jumbotron">
+            <h1 class="display-3">How is Twitter feeling about
+                <span id="monitor-phrase" class="text-primary"> phrase </span>?</h1>
+            <p class="lead"></p>
+            <div class="emoji">
+                <image style="vertical-align:middle" src="/images/thinking.png" />
+                <div> thinking </div>
+            </div>
+            <p class="display-3">Searching tweets...</p>
+            <div class="progress">
+                <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="5" aria-valuemin="0"
+                    aria-valuemax="100" style="width: 5%"></div>
+            </div>
+            <hr class="my-4">
+            <a class="btn btn-success" href="/">Monitor another phrase</a>
+            <br>
+            <br>
+        </div>
+</body>
