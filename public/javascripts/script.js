@@ -1,11 +1,13 @@
 
 var twitterMonitor;
+var monitorActive = false;
 var maxRequests = 10;
 
 // begin monitoring a Twitter phrase
 function beginMonitoring(phrase) {
     var monitoringRequests = 0;
     twitterMonitor = null;
+    monitorActive = true;
 
     // turn of the welcome page
     var welcomePage = document.getElementById("welcome");
@@ -29,6 +31,7 @@ function beginMonitoring(phrase) {
                 monitorTwitter();
             }
             else {
+                monitorActive = false;
                 // stop monitoring
                 var jqxhr = $.get("sentiment/stopTwitter?phrase=" + phrase, function (monitor) {
                     console.log("Phrase: " + monitor.phrase);
@@ -60,7 +63,7 @@ function createMonitoringPage(monitor, monitoringRequests) {
         "<h1 class='display-3'>How is Twitter feeling about <span class='text-primary'>" + twitterMonitor.phrase + "</span>?</h1>" +
         "<p class='lead'></p> " +
         "<div class='emoji'><image style='vertical-align:middle' src='/images/" + twitterMonitor.twitter.image + ".png'/><div>" + twitterMonitor.twitter.image + "</div></div>";
-    if (twitterMonitor.twitter.active) {
+    if (monitorActive) {
         var progress = (monitoringRequests / maxRequests) * 100;
         monitoringResponse += "<p class='display-3'>Searching tweets...</p>" +
             "<div class='progress'>" +
