@@ -40,7 +40,7 @@ router.get('/stopTwitter', function (req, res) {
             console.log("    Found twitter: " + req.query.phrase);
             monitor.twitter.stream.destroy();
             console.log("    Removing index: " + index);
-            twitterMonitors = twitterMonitors.splice(index,0);
+            twitterMonitors = twitterMonitors.splice(index, 0);
         }
     });
 
@@ -67,18 +67,20 @@ router.get('/monitorTwitter', function (req, res) {
     // monitor does not exist
     else {
 
-var twitterMonitor = {
-    count: 0, // number of tweets 
-    total: 0, // total sentiment value
-    avg: 0, // average sentiment (total / count)
-    max: 0, // max sentiment value
-    min: 0, // min sentiment value
-    positive: [], // positive words from tweets use in sentiment calulation
-    negative: [], // negative words from tweets use in sentiment calulation
-    stream: null, // the Twitter stream
-    active: true, // the Twitter stream is active
-    image: "thinking" // the sentiment image
-};
+        var twitterMonitor = {
+            count: 0, // number of tweets 
+            total: 0, // total sentiment value
+            avg: 0, // average sentiment (total / count)
+            max: 0, // max sentiment value
+            min: 0, // min sentiment value
+            positive: [], // positive words from tweets use in sentiment calulation
+            negative: [], // negative words from tweets use in sentiment calulation
+            coordinates: [], // array of coordinates
+            locations: [], // array of user locations
+            stream: null, // the Twitter stream
+            active: true, // the Twitter stream is active
+            image: "thinking" // the sentiment image
+        };
 
         console.log("     Creating new monitor...");
         // create new monitor
@@ -112,6 +114,16 @@ var twitterMonitor = {
                     }
                     else {
                         twitterMonitor.min = result.score;
+                    }
+                    // collect coordinates
+                    if (data.coordinates) {
+                        twitterMonitor.coordinates = data.coordinates;
+                    }
+                    // collect location
+                    if (typeof data.user.location != 'undefined') {
+                        if (data.user.location != null) {
+                            twitterMonitor.locations.push(data.user.location);
+                        }
                     }
                     // collect positive & negative words 
                     twitterMonitor.positive.push(result.positive);

@@ -117,6 +117,34 @@ function createMonitoringPage(monitor, monitoringRequests) {
     for (var i = 0; i < cleanNegativeWords.length; i++) {
         monitoringResponse += "<span class='badge badge-pill badge-primary'>" + cleanNegativeWords[i] + "</span>";
     }
+
+    monitoringResponse += "</td></tr></tbody></table>"+
+    "<table class='table table-striped table-hover table-bordered'>" +
+    "<thead class='thead-light'>" +
+    "<tr><th>User Locations</th></tr>" +
+    "</thead>" +
+    "<tbody>" +
+    "<tr><td>";
+    var cleanLocations = processWords(twitterMonitor.twitter.locations);
+    for (var i = 0; i < cleanLocations.length; i++) {
+        monitoringResponse += "<span class='badge badge-pill badge-primary'>" + cleanLocations[i] + "</span>";
+    }
+    monitoringResponse += "</td></tr></tbody></table>"+
+    "<table class='table table-striped table-hover table-bordered'>" +
+    "<thead class='thead-light'>" +
+    "<tr><th>User Coordinates</th></tr>" +
+    "</thead>" +
+    "<tbody>" +
+    "<tr><td>";   
+        
+    var noCoordinates = true;
+    for (var i = 0; i < twitterMonitor.twitter.coordinates.length; i++) {
+        monitoringResponse += "<span class='badge badge-pill badge-primary'>" + twitterMonitor.twitter.coordinates[i] + "</span>";
+        noCoordinates = false;
+    }
+    if(noCoordinates){
+        monitoringResponse += "No coordinates found";
+    }
     monitoringResponse += "</td></tr></tbody></table></BODY>";
 
     return monitoringResponse;
