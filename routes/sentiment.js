@@ -136,7 +136,7 @@ function processMonitor(monitor) {
 
 // determine average sentiment and return appropriate image
 function sentimentImage(monitor) {
-    monitor.avg = monitor.total / monitor.count;
+    monitor.avg = monitor.count > 0 ? monitor.total / monitor.count : 0;
     if (monitor.count > 0) {
         // excited
         if (parseFloat(monitor.avg) > 0.6) {
