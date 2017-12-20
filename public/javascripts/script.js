@@ -94,58 +94,22 @@ function createMonitoringPage(monitor, monitoringRequests) {
         "<tbody>" +
         "<tr class='table-info'><td>Range</td><td>> 0.6</td><td>0.6 - 0.2</td><td>0.2 - (-0.2)</td><td>(-0.2) - (-0.6)</td><td> < (-0.6)</td></tr>" +
         "</tbody>" +
-        "</table>" +
-        "<table class='table table-striped table-hover table-bordered'>" +
-        "<thead class='thead-light'>" +
-        "<tr><th>Positive Words</th></tr>" +
-        "</thead>" +
-        "<tbody>" +
-        "<tr><td>";
-
+        "</table>";
+    
+    // positive words
     var cleanPositiveWords = processWords(twitterMonitor.twitter.positive);
-    for (var i = 0; i < cleanPositiveWords.length; i++) {
-        monitoringResponse += "<span class='badge badge-pill badge-primary'>" + cleanPositiveWords[i] + "</span>";
-    }
-    monitoringResponse += "</td></tr></tbody></table><table class='table table-striped table-hover table-bordered'>" +
-        "<thead class='thead-light'>" +
-        "<tr><th>Negative Words (WARNING: words in this list can be Rated R)</th></tr>" +
-        "</thead>" +
-        "<tbody>" +
-        "<tr><td>";
-
+    monitoringResponse += createTable(cleanPositiveWords, "Positive Words");
+    
+    // negative words
     var cleanNegativeWords = processWords(twitterMonitor.twitter.negative);
-    for (var i = 0; i < cleanNegativeWords.length; i++) {
-        monitoringResponse += "<span class='badge badge-pill badge-primary'>" + cleanNegativeWords[i] + "</span>";
-    }
-
-    monitoringResponse += "</td></tr></tbody></table>"+
-    "<table class='table table-striped table-hover table-bordered'>" +
-    "<thead class='thead-light'>" +
-    "<tr><th>User Locations</th></tr>" +
-    "</thead>" +
-    "<tbody>" +
-    "<tr><td>";
+    monitoringResponse += createTable(cleanNegativeWords, "Negative Words");
+    // locations
     var cleanLocations = processWords(twitterMonitor.twitter.locations);
-    for (var i = 0; i < cleanLocations.length; i++) {
-        monitoringResponse += "<span class='badge badge-pill badge-primary'>" + cleanLocations[i] + "</span>";
-    }
-    monitoringResponse += "</td></tr></tbody></table>"+
-    "<table class='table table-striped table-hover table-bordered'>" +
-    "<thead class='thead-light'>" +
-    "<tr><th>User Coordinates</th></tr>" +
-    "</thead>" +
-    "<tbody>" +
-    "<tr><td>";   
-        
-    var noCoordinates = true;
-    for (var i = 0; i < twitterMonitor.twitter.coordinates.length; i++) {
-        monitoringResponse += "<span class='badge badge-pill badge-primary'>" + twitterMonitor.twitter.coordinates[i] + "</span>";
-        noCoordinates = false;
-    }
-    if(noCoordinates){
-        monitoringResponse += "No coordinates found";
-    }
-    monitoringResponse += "</td></tr></tbody></table></BODY>";
+    monitoringResponse += createTable(cleanLocations, "User Locations");
+    // coordinates
+    monitoringResponse += createTable(twitterMonitor.twitter.coordinates, "Coordinates");
+    
+    monitoringResponse += "</BODY>";
 
     return monitoringResponse;
 }
@@ -164,6 +128,33 @@ function processWords(words) {
         }
     }
     return cleanWords;
+}
+
+// create html table of words
+function createTable(words, title) {
+    var tableTitle = title == "Negative Words" ? title + " (WARNING: words in this list can be Rated R)" : title;
+    var table =
+        "<table class='table table-striped table-hover table-bordered'>" +
+        "<thead class='thead-light'>" +
+        "<tr><th>" + tableTitle + "</th></tr>" +
+        "</thead>" +
+        "<tbody>" +
+        "<tr><td>";
+    if (words.length > 0) {
+        for (var i = 0; i < words.length; i++) {
+            table += "<span class='badge badge-pill badge-primary'>" + words[i] + "</span>";
+        }
+    }
+    else{
+        if (!twitterMonitor.twitter.active) {
+            table += "No " + title.toLowerCase() + " found";
+        }
+        else {
+            table += "<p class='text-info'>Searching...</p>";
+        }
+    }
+    table += "</td></tr></tbody></table>";
+    return table;
 }
 
 // initialization
